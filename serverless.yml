@@ -1,0 +1,20 @@
+service: twilio-lookup
+
+custom:
+  secrets: ${file(secrets.json)}
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  environment:
+    ACCOUNT_SID: ${self:custom.secrets.ACCOUNT_SID}
+    AUTH_TOKEN: ${self:custom.secrets.AUTH_TOKEN}
+
+functions:
+  lookup:
+    handler: functions/lookup.handler
+    events:
+      - http:
+          path: lookup/{phoneNumber}
+          method: post
+          cors: true
